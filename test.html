@@ -1,0 +1,360 @@
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="app-version" content="&quot;2021-09-09T17:00:57.671Z - 349b8d4af4010286c83664fd127fe61a62bf3a00&quot;"><meta name="robots" content="noindex"><meta name="hostedSubdomain" content="webflow.io"><link rel="manifest" type="application/manifest+json" href="/manifest.json"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#3490eb"><link rel="stylesheet" type="text/css" href="https://d3e54v103j8qbb.cloudfront.net/gen/css/designer.9a4a601f22.css"><title>Webflow - SoftBit - Saas Template</title><link rel="icon" href="https://d3e54v103j8qbb.cloudfront.net/static/designer_favicon.5ea478d03e.png"><script>//- attributes == {apiKey: "", source: "", hostUrl: "", authenticated: true/false}
+    var source = 'designer-preview';
+    var hostUrl = 'https://webflow.com';
+    var authenticated = Boolean();
+    
+    var forceFalse = false;
+    // When ipstack is not loaded window.wf_continentCode is undefined and
+    // segment consent manager doesn't require consent. We assume consent for
+    // authenticated users
+    switch (source) {
+      case 'dashboard':
+        // If in iframe we don't want consent banner to pop up so we don't load ipstack,
+        // but we also use parent window consent manager settings for analytics
+        if (!authenticated && !isInIframe()) {
+          initCallbacks();
+          loadIpStack();
+        }
+        break;
+      case 'designer-preview':
+        // When loading preview.webflow.com/... we don't know if a user is
+        // authenticated or not so we need to call this extra endpoint
+        initCallbacks();
+        isAuthenticated(function(authenticated) {
+          if (!authenticated) {
+            loadIpStack();
+          } else {
+            // Needed to resolve wf_isEU
+            forceFalse = true;
+          }
+        });
+        break;
+      // Default: do nothing
+      // Users in Designer are always authenticated so we don't need to detect
+      // EU continent because we assume consent
+    }
+    
+    function initCallbacks() {
+      window.wf_onDetectContinent = function(data) { window.wf_continentCode = data.continent_code; };
+    
+      window.wf_isEU = function() {
+        if (typeof window.wf_continentCode === 'string' || typeof Promise === "undefined") {
+          return window.wf_continentCode === 'EU';
+        }
+        // There could be a race condition and wf_continentCode be undefined
+        return new Promise(function(resolve) {
+          var i = 0;
+          var interval = setInterval(function() {
+            if (typeof window.wf_continentCode === 'string' || i++ >= 50 || forceFalse) {
+              // Resolve it if:
+              // - ipstack has loaded and window.wf_continentCode is defined
+              // - 5 seconds passed and wf_continentCode is still undefined
+              // - forceFalse is true (used in preview sites when user is authenticated)
+              clearInterval(interval);
+              return resolve(window.wf_continentCode === 'EU');
+            }
+          }, 100);
+        });
+      };
+    }
+    
+    function loadIpStack() {
+      var head = document.getElementsByTagName("head")[0];
+      var ipstackScript = document.createElement("script");
+      ipstackScript.src = "https://api.ipstack.com/check?access_key=53038fede8e664ed0b2e5274047e23a8&fields=continent_code&callback=wf_onDetectContinent";
+      head.appendChild(ipstackScript);
+    }
+    
+    function isAuthenticated(cb) {
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", hostUrl + '/api/user/readOnlyData');
+      xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xmlhttp.withCredentials = true;
+      xmlhttp.onload = function() {
+        if (xmlhttp.status === 200) {
+          cb(true);
+        } else {
+          cb(false);
+        }
+      };
+      xmlhttp.send();
+    }
+    
+    function isInIframe() {
+      try {
+        return window.self !== window.top;
+      } catch (e) {
+        return true;
+      }
+    }</script><script type="text/javascript">!function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics.SNIPPET_VERSION="4.13.1";
+    //- Purposefully doesn't include 'analytics.load(API_TOKEN)' here, as this is deferred to segment-consent-manager
+    analytics.page();
+    }}();</script></head><body class="wf-control"><div id="preloader"><div class="preloader-progress"><div class="preloader-container"><svg width="300" height="300"><defs></defs><circle cx="150" cy="150" fill="none" r="120" stroke="#404040" stroke-width="6px"></circle><circle id="preloader-progress" cx="150" cy="150" r="120" fill="none" stroke="#178df7" stroke-width="6px" stroke-dasharray="942.477" stroke-dashoffset="942.477" class="fill">  </circle><image id="preloader-brand" x="80" y="36" width="140" height="36" xlink:href="https://d3e54v103j8qbb.cloudfront.net/public/webflow-logo-loader.3bd3dd30fb.svg" transform="rotate(90,100,100)" class="preloader-brand preloader-brand"></image></svg></div><text id="preloader-message" class="preloader-message preloader-message"> Making it pop</text></div></div><script type="text/javascript">window.performance && typeof performance.mark === 'function' &&
+      performance.mark('start js:execute-preloader');</script><script type="text/javascript">var Preloader=function(e,t,a){var s=e[t](a);var r=e[t](a+"-message");var i=e[t](a+"-progress");function n(e,t){if(i&&r){i.style.transition="none";var a=i.r.baseVal.value;var s=a*2*Math.PI;var n=s-e/100*s;i.style.transition="stroke-dashoffset .25s linear";i.style.strokeDashoffset=n;if(t){r.innerHTML=t}}}function o(){if(s){s.classList.add("inactive");var t=600;s.style.transition="opacity 600ms ease-out";s.style.opacity="0";setTimeout(function(){var e=s;e.classList.add("hidden");setTimeout(function(){if(e.parentNode){e.parentNode.removeChild(e)}s=r=null},t*5)},t)}}return{update:n,destroy:o}}(document,"getElementById","preloader");
+    </script><script type="text/javascript">window.performance && typeof performance.mark === 'function' &&
+      performance.mark('end js:execute-preloader');
+    </script><div id="workspace" style="height: 100%"></div><div id="debug-overlay"></div><iframe id="responsive-images-iframe" src="/site/empty.html"></iframe><div id="designer-app-react-mount"></div><div id="preload-assets"></div><div id="drag-ghost"></div><div id="wf-eyedropper-button"></div><script type="text/javascript">if (typeof Preloader !== 'undefined') Preloader.update(14);
+    </script><script type="text/javascript">window.performance && typeof performance.mark === 'function' &&
+      performance.mark('start js:execute-app');
+    
+      </script><script type="text/javascript" src="https://d3e54v103j8qbb.cloudfront.net/gen/js/webflow-designer-bugsnag.min.d02837a3e2.js" crossorigin="anonymous"></script><script type="text/plain" id="wf-initial-data">{}
+    </script><script type="text/javascript">function htmlDecode(input) {
+      var doc = new DOMParser().parseFromString(input, "text/html");
+      return doc.documentElement.textContent;
+    }
+    var initialDataEl = document.getElementById('wf-initial-data');
+    var initialData = {};
+    try {
+      initialData = JSON.parse(htmlDecode(initialDataEl.innerHTML));
+    } catch (e) {
+      console.log("Failed to parse initial data");
+    }
+    window.webflowInitialData = initialData;
+    window.webflowUserEventsToken = initialData.userEventsToken;
+    window.datadogRumConfig = {"sampleRate":50,"env":"prod","version":"main-349b8d4af4010286c83664fd127fe61a62bf3a00","trackInteractions":true,"allowedTracingOrigins":["https://webflow.com","http://webflow.com","https://www.webflow.com","http://webflow.com"]};
+    </script><script type="text/javascript" src="https://d3e54v103j8qbb.cloudfront.net/gen/js/webflow-designer.min.771a6a8930.js" crossorigin="anonymous"></script><script type="text/javascript">window.performance && typeof performance.mark === 'function' &&
+      performance.mark('end js:execute-app');
+    </script><script>window.consentManagerConfig = function(exports) {
+      var React = exports.React
+      var bannerContent = React.createElement(
+        "span",
+        null,
+        "We use cookies (and other similar technologies) to improve your experience on our site. By using this website you agree to our",
+        " ",
+        React.createElement(
+          "a",
+          { href: '/legal/cookie-policy', target: "_blank" },
+          "Cookie Policy"
+        ),
+        "."
+      );
+      var preferencesDialogTitle = 'Cookie Preferences'
+      var preferencesDialogContent = 'We use data collected by cookies and JavaScript libraries to improve the functionality of the Webflow Dashboard, deliver personalized advertisements, and increase the overall performance of our service.'
+      var cancelDialogTitle = 'Are you sure you want to cancel?'
+      var cancelDialogContent = React.createElement(
+        'span',
+        null,
+        'Your preferences have not been saved. By continuing to use our website, you՚re agreeing to our',
+        ' ',
+        React.createElement(
+          'a',
+          {href: '/legal/cookie-policy', target: '_blank'},
+          'Cookie Policy'
+        ),
+        '.'
+      )
+      var defaultDestinationBehavior = 'imply'
+    
+      return {
+        container: '#consent-container',
+        writeKey: 'o7IYLBfvZF4my8WYgLoerBVCSRYbBOfp',
+        shouldRequireConsent: function () {
+          // This is set in ipstack
+          return typeof window.wf_isEU === 'function'
+            ? window.wf_isEU()
+            : false;
+        },
+        bannerContent: bannerContent,
+        preferencesDialogTitle: preferencesDialogTitle,
+        preferencesDialogContent: preferencesDialogContent,
+        cancelDialogTitle: cancelDialogTitle,
+        cancelDialogContent: cancelDialogContent,
+        defaultDestinationBehavior: defaultDestinationBehavior,
+        onError: function(err) { console.error('SegmentConsentManager', err); },
+        closeBehavior: function(categories) {
+          return categories; // This sets them to the default value
+        },
+      }
+    }
+    
+    var body = document.getElementsByTagName("body")[0];
+    var consentScript = document.createElement("script");
+    consentScript.setAttribute(
+      "src",
+      "https://unpkg.com/@segment/consent-manager@4.5.1/standalone/consent-manager.js"
+    );
+    consentScript.setAttribute(
+      "integrity",
+      "sha384-6m1+pfvSflZ20rCXvmOQ340ZQ4K4peogarq/HMfzcCXyB6ngUjpm3PuCGwvQy87Y"
+    );
+    consentScript.setAttribute("crossorigin", "anonymous");
+    consentScript.setAttribute("defer", "defer");
+    body.appendChild(consentScript);
+    </script><div id="consent-container"></div><script type="text/javascript">(function() {    
+      function getQueryParam (param) {
+        var query = window.location.search.substring(1);
+        var params = query.split('&');
+        for (var i = 0; i < params.length; i++) {
+          var pair = params[i].split('=');
+          if (decodeURIComponent(pair[0]) === param) {
+            return decodeURIComponent(pair[1]);
+          }
+        }
+        return null;
+      }
+    
+      function getURLDomainName (url) {
+        var a = document.createElement('a');
+        a.href = url;
+        return a.hostname;
+      }
+    
+      function setCookie (firstTouchParams) {
+        var expireDate = new Date();
+        expireDate.setTime(expireDate.getTime()+(365*24*60*60*1000));
+    
+        document.cookie = [
+          window.SharedConfig.FIRST_TOUCH_COOKIE,
+          '=',
+          encodeURIComponent(JSON.stringify(firstTouchParams)),
+          ';domain=.',
+          window.location.hostname.toString(),
+          ';path=/',
+          ';expires=',
+          expireDate.toUTCString(),
+        ].join('');
+      }
+    
+      function getBreadcrumb() {
+        var match = 'utm_';
+        var hasUtm = window.location.search.substr(1).split('&').some(function(query) {
+          var chunks = query.split('=');
+          var key = chunks[0];
+          return key.startsWith(match);
+        });
+    
+        return (hasUtm) ?
+          window.location.host +
+          window.location.pathname +
+          window.location.search +
+          window.location.hash :
+          '';
+      }
+    
+      if (window.self !== window.top) {
+        // If this is loaded in an iframe, skip setting the first touch cookie.
+        // We load the dashboard sign up page in an iframe (within a modal) on marketing pages
+        // and the iframe has the incorrect first touch parameters. 
+        // Therefore we'll let the marketing page itself set the cookie and skip setting it here.
+        return;
+      }
+    
+      var cookieKey = window.SharedConfig && window.SharedConfig.FIRST_TOUCH_COOKIE;
+    
+      if (cookieKey) {
+        var firstTouchCookie = document.cookie.split(';').find(function(item) {
+          return item.trim().indexOf(cookieKey + '=') === 0;
+        });
+    
+        var breadcrumb = getBreadcrumb();
+        if (!firstTouchCookie) {
+          var firstTouchParams = {
+            first_touch_date: new Date().toISOString(),
+            initial_utm_campaign: getQueryParam('utm_campaign'),
+            initial_utm_content: getQueryParam('utm_content'),
+            initial_utm_medium: getQueryParam('utm_medium'),
+            initial_utm_source: getQueryParam('utm_source'),
+            initial_utm_term: getQueryParam('utm_term'),
+            initial_gclid: getQueryParam('gclid'),
+            initial_page_url: document.location.href,
+          };
+    
+          if (document.referrer) {
+            firstTouchParams['initial_referrer'] = document.referrer;
+            firstTouchParams['initial_referring_domain'] = getURLDomainName(document.referrer);
+          }
+    
+          if (breadcrumb) {
+            firstTouchParams['presignup_breadcrumbs'] = [breadcrumb];
+          }
+    
+          setCookie(firstTouchParams);
+    
+        } else if (breadcrumb) {
+          var firstTouchData;
+          try {
+            firstTouchData = JSON.parse(decodeURIComponent(firstTouchCookie).trim().substring(cookieKey.length + 1, firstTouchCookie.length))
+          } catch (e) {
+            console.log(e);
+            return;
+          }
+    
+          if (firstTouchData.presignup_breadcrumbs) {
+            firstTouchData.presignup_breadcrumbs.push(breadcrumb);
+          } else {
+            firstTouchData['presignup_breadcrumbs'] = [breadcrumb];
+          }
+    
+          setCookie(firstTouchData);
+        }
+      }
+    })();</script><link href="//fonts.googleapis.com/css?family=Roboto:400,300,500|Inconsolata:400,700" rel="stylesheet" type="text/css"><script>// Determine whether we're in an iframe
+    var inIframe = (function() {
+      try {
+        return window.self !== window.top;
+      } catch (e) {
+        return true;
+      }
+    })();
+    
+    // Adapted from https://webflow.refersion.com/tracker/v3/pub_0315b525b40a19a31ce7.js
+    function rfsnLoadScript(source, onReady, appendToScripts) {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.async = 0;
+      script.defer = 0;
+    
+      if (script.readyState) {
+        script.onreadystatechange = function() {
+          if ("loaded" == script.readyState || "complete" == script.readyState) {
+            script.onreadystatechange = null;
+            onReady();
+          }
+        };
+      } else {
+        script.onload = function() {
+          "undefined" != typeof onReady && onReady()
+        };
+      }
+      script.src = source;
+    
+      if (appendToScripts) {
+        var firstScript = document.getElementsByTagName("script")[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+      } else {
+        document.getElementsByTagName("head")[0].appendChild(script);
+      }
+    };
+    
+    window._refersion = function(cb) {
+      "undefined" == typeof cb && (cb = function() {});
+      rfsnLoadScript("https://webflow.refersion.com/tracker/v3/merchant/pub_0315b525b40a19a31ce7.js?v=" + Math.floor(100 * Math.random()), cb);
+    };
+    
+    if (!inIframe) {
+      window._refersion();
+    }</script><script>var apiKey = 'pk_2MURg5tFoHdpERLfsXpSVlnLZbJDoUSN';
+    // Adapted from PartnerStack snippet https://app.partnerstack.com/settings/integrations/snippet
+    function loadPartnerStack() {
+      var script = document.createElement('script');
+      script.src = 'https://snippet.growsumo.com/growsumo.min.js';
+      script.type = 'text/javascript';
+      script.async = 'true';
+      script.onload = script.onreadystatechange = function() {
+        var rs = this.readyState;
+        if (rs && rs != 'complete' && rs != 'loaded') return;
+        try {
+          growsumo._initialize(apiKey);
+          if (typeof(growsumoInit) === 'function') {
+            growsumoInit();
+          }
+        } catch (e) {}
+      };
+      var topScript = document.getElementsByTagName('script')[0];
+      topScript.parentNode.insertBefore(script, topScript);
+    }
+    
+    if (Boolean(apiKey)) {
+      loadPartnerStack();
+    }</script></body></html>
